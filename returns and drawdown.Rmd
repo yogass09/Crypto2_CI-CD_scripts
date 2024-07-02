@@ -1,0 +1,115 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+```{r}
+# Load dplyr if not already loaded
+library(dplyr)
+library(readr)
+CryptoMasterFile <- read_csv("~/GitHub/CryptoDashboardPitch/Data FIles/CryptoMasterFile.csv")
+#View(CryptoMasterFile)
+CryptoMasterFile<- CryptoMasterFile%>% rename(ticker=symbol)
+df<-CryptoMasterFile
+# Rename 'symbol' to 'ticker'
+#names(df)[names(df) == "symbol"] <- "ticker"
+
+# Verify the change
+#head(returns_crypto)
+
+returns_crypto<-df
+
+
+# Ensure the data is ordered properly
+returns_crypto_modellinginpowerbi <- df %>% select(ticker, date,close )
+```
+
+
+```{r}
+# Save returns_crypto dataframe as CSV
+write.csv(returns_crypto_modellinginpowerbi, file = "returns_crypto_forpbi.csv", row.names = FALSE)# Save returns_crypto dataframe as CSV
+```
+
+```{r echo=TRUE}
+library(dplyr)
+library(zoo)
+library(dplyr)
+library(zoo)
+
+# Ensure the data is ordered properly
+returns_crypto <- df %>% arrange(ticker, date,close )
+
+library(dplyr)
+library(zoo)
+
+# Assuming 'returns_crypto' is already a dataframe
+returns_crypto <- returns_crypto %>%
+  group_by(ticker) %>%
+  mutate(
+    `1d%` = round((close - lag(open, 1)) / lag(open, 1), 4),
+    `3d%` = round((close - lag(open, 3)) / lag(open, 3), 4),
+    `7d%` = round((close - lag(open, 7)) / lag(open, 7), 4),
+    `14d%` = round((close - lag(open, 14)) / lag(open, 14), 4),
+    `30d%` = round((close - lag(open, 30)) / lag(open, 30), 4),
+    `60d%` = round((close - lag(open, 60)) / lag(open, 60), 4),
+    `90d%` = round((close - lag(open, 90)) / lag(open, 90), 4),
+    `180d%` = round((close - lag(open, 180)) / lag(open, 180), 4),
+    `365d%` = round((close - lag(open, 365)) / lag(open, 365), 4),
+    `All-time%` = round((close - first(open)) / first(open), 4)
+  ) %>%
+  na.fill(0)  # Replace NA values with 0
+
+# View the updated dataframe
+head(returns_crypto)
+```
+
+```{r}
+library(dplyr)
+library(zoo)
+
+# Convert 'returns_crypto' to a dataframe
+returns_crypto <- as.data.frame(returns_crypto)
+
+# Assuming 'returns_crypto' is now a dataframe
+alltime_returns <- returns_crypto %>%
+  group_by(ticker) %>%
+  summarise(latest_alltime = last(na.omit(`All-time%`)), .groups = "drop")
+# Print the 'alltime_returns' dataframe
+print(alltime_returns)
+```
+
+```{r echo=TRUE}
+library(dplyr)
+
+# Assuming df contains the prices of cryptocurrencies with columns: ticker, date, close
+
+# Calculate maximum drawdown for each cryptocurrency
+max_drawdowns <- df %>%
+  group_by(ticker) %>%
+  mutate(
+    peak = max(close),
+    trough = min(close[which.max(close):n()]),
+    max_drawdown = (peak - close) / peak
+  )
+
+```
+
+
+```{r}
+# Now calculate the maximum drawdown for each ticker
+drawdowns <- max_drawdowns %>%
+  group_by(ticker) %>%
+  summarise(
+    max_drawdown = mean(max_drawdown)  # Get the mean drawdown observed for each ticker as in crypto max would not be suitable
+  )
+
+```
+
+
+```{r eval=FALSE, include=FALSE}
+
+# Save returns_crypto dataframe as CSV
+write.csv(returns_crypto, file = "returns_crypto.csv", row.names = FALSE)# Save returns_crypto dataframe as CSV
+write.csv(max_drawdowns, file = "max_drawdowns.csv", row.names = FALSE)
+
+```
+
