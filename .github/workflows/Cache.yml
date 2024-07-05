@@ -1,7 +1,17 @@
-- name: Cache R packages
-  uses: actions/cache@v4.0.2
-  with:
-    path: ~/R-packages
-    key: ${{ runner.os }}-r-packages-${{ hashFiles('**/requirements.txt') }}
-    restore-keys: ${{ runner.os }}-r-packages-
-    fail-on-cache-miss: true
+name: Cache R packages
+
+on:
+  schedule:
+    - cron: "*/1 * * * *"
+
+jobs:
+  scheduled:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Cache R packages
+        uses: actions/cache@v4.0.2
+        with:
+          path: ~/R-packages
+          key: ${{ runner.os }}-r-packages-${{ hashFiles('**/requirements.txt') }}
+          restore-keys: ${{ runner.os }}-r-packages-
+          fail-on-cache-miss: true
