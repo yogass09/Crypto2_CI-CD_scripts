@@ -3,15 +3,19 @@ library(DBI)
 library(odbc)
 library(dplyr)
 library(crypto2)
-#
+library(SQL)
+
 start.time <- Sys.time()
 
-
 ## 1. Crypto List
-crypto.list <- crypto_list(only_active = TRUE, add_untracked = FALSE)
+crypto.list <- crypto_list(only_active = FALSE, add_untracked = TRUE)
 
-## 2. Crypto Info
-crypto.info <-crypto_info(coin_list = crypto.list ,limit = 1 ,requestLimit = 1,sleep = 0,finalWait = FALSE)
+# Create active and inactive DataFrames
+crypto.list.active <- crypto.list[crypto.list$is_active == 1, ]
+crypto.list.inactive <- crypto.list[crypto.list$is_active == 0, ]
+
+
+
 
 ## 3. Crypto Global Latest
 crypto.global.latest <- crypto_global_quotes(
@@ -31,7 +35,7 @@ crypto.global.latest <- crypto_global_quotes(
 crypto.global.historical <- crypto_global_quotes(
   which = "historical",
   convert = "USD",
-  start_date = Sys.Date()-1,
+  start_date = Sys.Date()-5,
   end_date = Sys.Date(),
   interval = "daily",
   quote = TRUE,
@@ -46,8 +50,8 @@ crypto.global.historical <- crypto_global_quotes(
 crypto.listings.latest <- crypto_listings(
   which = "latest",
   convert = "USD",
-  limit = 1,
-  start_date = Sys.Date()-1,
+  limit = 10000,
+  start_date = Sys.Date()-5,
   end_date = Sys.Date(),
   interval = "day",
   quote = TRUE,
@@ -62,15 +66,15 @@ crypto.listings.latest <- crypto_listings(
 crypto.listings.historical <- crypto_listings(
   which = "historical",
   convert = "USD",
-  limit = 1,
-  start_date = Sys.Date()-1,
+  limit = 10000,
+  start_date = Sys.Date()-30,
   end_date = Sys.Date(),
   interval = "day",
   quote = TRUE,
   sort = "cmc_rank",
   sort_dir = "asc",
   sleep = 0,
-  wait = 60,
+  wait = 0,
   finalWait = FALSE
 )
 
@@ -99,21 +103,21 @@ con <- dbConnect(odbc::odbc(),Driver = "ODBC Driver 17 for SQL Server",
 
 # Assuming 'all_coins_historical' is your tibble
 # 1
-dbWriteTable(con, "crypto.list", as.data.frame(crypto.list), append = TRUE)
-# 2
-dbWriteTable(con, "crypto.info", as.data.frame(crypto.info), overwrite = TRUE)
+dbWriteTable(con, "crypto.list", as.data.frame(crypto.list), overwrite = TRUE)
+# 2 -  another Script
+##dbWriteTable(con, "crypto.info", as.data.frame(crypto.info), overwrite = TRUE)
 # 3
-dbWriteTable(con, "crypto.global.latest", as.data.frame(crypto.global.latest), overwwrite = TRUE)
+dbWriteTable(con, "crypto.global.latest", as.data.frame(crypto.global.latest), overwrite = TRUE)
 # 4
-dbWriteTable(con, "crypto.global.historical", as.data.frame(crypto.global.historical), append = TRUE)
+dbWriteTable(con, "crypto.global.historical", as.data.frame(crypto.global.historical), overwrite = TRUE)
 # 5
-dbWriteTable(con, "crypto.listings.latest", as.data.frame(crypto.listings.latest), overwwrite = TRUE)
+dbWriteTable(con, "crypto.listings.latest", as.data.frame(crypto.listings.latest), overwrite = TRUE)
 # 6
-dbWriteTable(con, "crypto.listings.historical", as.data.frame(crypto.listings.historical), append = TRUE)
+dbWriteTable(con, "crypto.listings.historical", as.data.frame(crypto.listings.historical), overwrite = TRUE)
 # 7
-dbWriteTable(con, "crypto.exchanges.list", as.data.frame(crypto.exchanges.list), overwwrite = TRUE)
-# 8
-dbWriteTable(con, "crypto.exchanges.info", as.data.frame(crypto.exchanges.info), overwrite = TRUE)
+dbWriteTable(con, "crypto.exchanges.list", as.data.frame(crypto.exchanges.list), overwrite = TRUE)
+# 8 -  another Script
+#dbWriteTable(con, "crypto.exchanges.info", as.data.frame(crypto.exchanges.info), overwrite = TRUE)
 
 # Disconnect from the database
 dbDisconnect(con)

@@ -4,7 +4,7 @@ start_time <- Sys.time()
 
 testc2<-crypto_history(coin_list = coin_list_all,
                convert = "USD", # change to USD or other currency if desired
-               limit = 1000,
+               limit = 10000,
                sleep = 0,
                interval = "1h",
                start_date = Sys.Date()-1,
