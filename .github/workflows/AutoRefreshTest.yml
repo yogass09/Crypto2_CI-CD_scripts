@@ -16,19 +16,19 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Set up R
+      - name: Set up R environment
         uses: r-lib/actions/setup-r@v2
         with:
           use-public-rspm: true
           install-r: true
-          r-version: '4.2.2'  # Update to a newer version of R
+          r-version: '4.3.0'
 
       - name: Cache R packages
         uses: actions/cache@v2
         id: r-packages
         with:
           path: ~/R-packages
-          key: ${{ runner.os }}-r-packages
+          key: ${{ runner.os }}-r-packages-${{ hashFiles('**/requirements.txt') }}
 
       - name: Install R packages
         if: steps.r-packages.cache-hit != true
@@ -37,7 +37,7 @@ jobs:
 
       - name: List files in directory (optional for debugging)
         run: |
-          ls  # List files in the current directory
+          ls
 
       - name: Run R script
         run: Rscript TimeTest.R
