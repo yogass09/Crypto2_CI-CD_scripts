@@ -1,0 +1,30 @@
+name: Update data
+
+on:
+  schedule:
+    - cron: "* * * * *"  # Runs daily at midnight UTC. Adjust as needed.
+  workflow_dispatch: {}
+  push:
+    branches:
+      - main
+
+jobs:
+  scheduled:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository.
+        uses: actions/checkout@v2
+
+      - name: Set up R
+        uses: r-lib/actions/setup-r@v1
+        with:
+          r-version: latest
+
+      - name: Install R packages
+        run: |
+          Rscript -e 'install.packages(c("DBI", "odbc", "dplyr", "crypto2"))'
+
+      - name: Run R script
+        run: |
+          Rscript R/TimeTest.R
