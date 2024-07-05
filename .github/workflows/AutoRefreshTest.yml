@@ -13,13 +13,14 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository.
+      - name: Checkout repository
         uses: actions/checkout@v2
 
       - name: Set up R
         uses: r-lib/actions/setup-r@v1
         with:
-          r-version: latest
+          use-public-rspm: true  # Use public RStudio Package Manager for faster package installation
+          r-version: latest  # Install the latest version of R available
 
       - name: Install R packages
         run: |
@@ -27,4 +28,4 @@ jobs:
 
       - name: Run R script
         run: |
-          Rscript R/TimeTest.R
+          Rscript TimeTest.R
