@@ -24,7 +24,7 @@ jobs:
 
       - name: Install R packages
         run: |
-          Rscript -e 'install.packages(c("DBI", "odbc", "dplyr", "crypto2"))'
+          install.packages(c("DBI", "odbc", "dplyr", "crypto2"))
 
       - name: List files in directory (optional for debugging)
         run: |
@@ -32,4 +32,4 @@ jobs:
           ls Crypto2_CI-CD_scripts/R  # List files in the specific directory
 
       - name: Run R script
-        run: TimeTest.R
+        run: Rscript Crypto2_CI-CD_scripts/R/TimeTest.R
