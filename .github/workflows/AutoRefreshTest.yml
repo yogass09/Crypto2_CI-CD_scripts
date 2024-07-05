@@ -32,5 +32,4 @@ jobs:
           ls Crypto2_CI-CD_scripts/R  # List files in the specific directory
 
       - name: Run R script
-        run: |
-          Rscript Crypto2_CI-CD_scripts/R/TimeTest.R
+        run: TimeTest.R
