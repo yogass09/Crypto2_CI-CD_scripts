@@ -23,13 +23,8 @@ jobs:
           install-r: true  # Install the latest version of R available
 
       - name: Install R packages
-              run: |
-    install.packages("DBI", repos = "https://cloud.r-project.org/")
-    install.packages("odbc", repos = "https://cloud.r-project.org/")
-    install.packages("dplyr", repos = "https://cloud.r-project.org/")
-    install.packages("crypto2", repos = "https://cloud.r-project.org/")
-
-          
+        run: |
+          install.packages(c("DBI", "odbc", "dplyr", "crypto2"), repos = "https://cloud.r-project.org/")
 
       - name: List files in directory (optional for debugging)
         run: |
