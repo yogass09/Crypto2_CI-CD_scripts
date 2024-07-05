@@ -24,7 +24,7 @@ jobs:
 
       - name: Install R packages
         run: |
-          install.packages(c("DBI", "odbc", "dplyr", "crypto2"), repos = "https://cloud.r-project.org/")
+          Rscript -e 'install.packages(c("DBI", "odbc", "dplyr", "crypto2"), repos = "https://cloud.r-project.org/")'
 
       - name: List files in directory (optional for debugging)
         run: |
