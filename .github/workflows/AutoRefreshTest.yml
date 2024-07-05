@@ -27,5 +27,4 @@ jobs:
           Rscript -e 'install.packages(c("DBI", "odbc", "dplyr", "crypto2"))'
 
       - name: Run R script
-        run: |
-           TimeTest.R
+        run: Rscript -e 'source("TimeTest.R")'
