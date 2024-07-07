@@ -39,7 +39,7 @@ crypto.global.historical <- crypto_global_quotes(
   end_date = Sys.Date(),
   interval = "daily",
   quote = TRUE,
-  requestLimit = 1000,
+  requestLimit = 10000,
   sleep = 0,
   wait = 60,
   finalWait = FALSE
@@ -67,7 +67,7 @@ crypto.listings.historical <- crypto_listings(
   which = "historical",
   convert = "USD",
   limit = 10000,
-  start_date = Sys.Date()-30,
+  start_date = Sys.Date()-5,
   end_date = Sys.Date(),
   interval = "day",
   quote = TRUE,
@@ -103,17 +103,17 @@ con <- dbConnect(odbc::odbc(),Driver = "ODBC Driver 17 for SQL Server",
 
 # Assuming 'all_coins_historical' is your tibble
 # 1
-dbWriteTable(con, "crypto.list", as.data.frame(crypto.list), overwrite = TRUE)
+dbWriteTable(con, "crypto.list", as.data.frame(crypto.list), append = TRUE)
 # 2 -  another Script
 ##dbWriteTable(con, "crypto.info", as.data.frame(crypto.info), overwrite = TRUE)
 # 3
 dbWriteTable(con, "crypto.global.latest", as.data.frame(crypto.global.latest), overwrite = TRUE)
 # 4
-dbWriteTable(con, "crypto.global.historical", as.data.frame(crypto.global.historical), overwrite = TRUE)
+dbWriteTable(con, "crypto.global.historical", as.data.frame(crypto.global.historical), append = TRUE)
 # 5
 dbWriteTable(con, "crypto.listings.latest", as.data.frame(crypto.listings.latest), overwrite = TRUE)
 # 6
-dbWriteTable(con, "crypto.listings.historical", as.data.frame(crypto.listings.historical), overwrite = TRUE)
+dbWriteTable(con, "crypto.listings.historical", as.data.frame(crypto.listings.historical), append = TRUE)
 # 7
 dbWriteTable(con, "crypto.exchanges.list", as.data.frame(crypto.exchanges.list), overwrite = TRUE)
 # 8 -  another Script

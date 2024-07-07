@@ -14,7 +14,7 @@ library(crypto2)
 Daily_OHLCV<-crypto_history(coin_list = crypto.list,
                                      convert = "USD", 
                                      limit = 1,sleep = 0,
-                                     start_date = Sys.Date()-1,
+                                     start_date = Sys.Date()-10,
                                      end_date = Sys.Date()+1)
 
 # Set up your Azure SQL Database connection
