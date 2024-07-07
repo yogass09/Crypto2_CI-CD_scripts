@@ -45,7 +45,7 @@ tryCatch({
   data <- get_datetime_info()
   
   # Write data to the SQL database
-  dbWriteTable(con, "ci.cd.test.min", data, overwrite = TRUE)
+  dbWriteTable(con, "ci.cd.test.min", data, append = TRUE)
   
   # Disconnect from the database
   dbDisconnect(con)
